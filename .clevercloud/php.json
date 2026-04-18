@@ -1,4 +1,7 @@
 {
+    "configuration": {
+        "php_version": "8.1"
+    },
     "deploy": {
         "webroot": "public"
     }
