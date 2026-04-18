@@ -1,5 +1,8 @@
 {
     "deploy": {
         "webroot": "/public"
+    },
+    "hooks": {
+        "postBuild": "bash clevercloud/build.sh"
     }
 }
