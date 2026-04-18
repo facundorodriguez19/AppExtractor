@@ -5,7 +5,7 @@
 .env
 .env.backup
 .env.production
-composer.lock
+# composer.lock
 package-lock.json
 npm-debug.log
 yarn-error.log
