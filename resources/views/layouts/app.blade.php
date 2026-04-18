@@ -49,6 +49,9 @@
                         </div>
                     </div>
                     <div class="hidden sm:flex items-center">
+                        <a href="{{ route('notas.create') }}" class="px-4 py-2 bg-primary-500 text-white rounded-lg text-sm font-bold hover:bg-primary-600 transition">
+                            Nova Nota
+                        </a>
                     </div>
                     <div class="flex items-center sm:hidden">
                         <button type="button"
@@ -74,6 +77,9 @@
                     </a>
                     <a href="{{ route('notas.index') }}" class="{{ request()->routeIs('notas.index') ? 'bg-primary-50 text-primary-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} block rounded-lg px-3 py-2 text-sm font-bold">
                         Minhas Notas
+                    </a>
+                    <a href="{{ route('notas.create') }}" class="mt-3 block rounded-lg bg-primary-500 px-3 py-2 text-center text-sm font-bold text-white hover:bg-primary-600">
+                        Nova Nota
                     </a>
                 </div>
             </div>
