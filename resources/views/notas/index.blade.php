@@ -21,7 +21,7 @@
                 <div class="space-y-1 lg:col-span-2">
                     <label class="text-[10px] font-bold text-gray-400 uppercase ml-2">Categoria</label>
                     <div class="relative">
-                        <select name="categoria" class="w-full px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 outline-none transition">
+                        <select name="categoria" class="w-full appearance-none px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 outline-none transition">
                             <option value="">Todas</option>
                             @foreach(['alimentacao', 'transporte', 'saude', 'tecnologia', 'educacao', 'outros'] as $cat)
                                 <option value="{{ $cat }}" {{ request('categoria') === $cat ? 'selected' : '' }}>{{ ucfirst($cat) }}</option>
