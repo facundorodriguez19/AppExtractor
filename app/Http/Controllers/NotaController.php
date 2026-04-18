@@ -51,6 +51,13 @@ class NotaController extends Controller
         return view('notas.show', compact('nota'));
     }
 
+    public function arquivo(Nota $nota)
+    {
+        abort_unless($nota->arquivo && Storage::disk('public')->exists($nota->arquivo), 404);
+
+        return response()->file(Storage::disk('public')->path($nota->arquivo));
+    }
+
     public function edit(Nota $nota)
     {
         return view('notas.edit', compact('nota'));

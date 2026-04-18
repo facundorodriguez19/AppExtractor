@@ -86,17 +86,27 @@
                     </div>
 
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
+                        @php
+                            $arquivoDisponivel = $nota->arquivo && \Illuminate\Support\Facades\Storage::disk('public')->exists($nota->arquivo);
+                        @endphp
                         <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-6">Arquivo Original</h3>
                         <div class="rounded-xl overflow-hidden border border-gray-100 bg-gray-50">
-                            @if($nota->arquivo_tipo === 'pdf')
+                            @if(!$arquivoDisponivel)
+                                <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+                                    <svg class="h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 115.636 5.636m12.728 12.728L5.636 5.636" />
+                                    </svg>
+                                    <p class="mt-4 text-sm font-bold text-gray-500">Arquivo indisponível</p>
+                                </div>
+                            @elseif($nota->arquivo_tipo === 'pdf')
                                 <div class="flex flex-col items-center justify-center py-12">
                                     <svg class="h-16 w-16 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M4 4a2 2 0 012-2h4.586A1 1 0 0111.293 2.707l3 3a1 1 0 01.293.707V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
                                     </svg>
-                                    <a href="{{ asset('storage/' . $nota->arquivo) }}" target="_blank" class="mt-4 text-primary-500 font-bold hover:underline">Ver PDF</a>
+                                    <a href="{{ route('notas.arquivo', $nota) }}" target="_blank" class="mt-4 text-primary-500 font-bold hover:underline">Ver PDF</a>
                                 </div>
                             @else
-                                <img src="{{ asset('storage/' . $nota->arquivo) }}" class="w-full h-auto cursor-pointer" @click="window.open($el.src)">
+                                <img src="{{ route('notas.arquivo', $nota) }}" class="w-full h-auto cursor-pointer" @click="window.open($el.src)">
                             @endif
                         </div>
                     </div>
