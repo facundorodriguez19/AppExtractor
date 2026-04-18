@@ -1,7 +1,4 @@
 {
-    "webroot": "/public",
-    "php_version": "8.2",
-    "display_errors": "off",
     "deploy": {
         "webroot": "/public"
     }
