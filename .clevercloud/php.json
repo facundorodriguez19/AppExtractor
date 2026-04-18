@@ -2,8 +2,7 @@
     "webroot": "/public",
     "php_version": "8.2",
     "display_errors": "off",
-    "composer_version": "2",
-    "scripts": {
-        "post-install": "bash scripts/post-deploy.sh"
+    "deploy": {
+        "webroot": "/public"
     }
 }

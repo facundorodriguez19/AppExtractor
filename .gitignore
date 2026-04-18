@@ -2,15 +2,6 @@
 /node_modules
 /public/storage
 /storage/*.key
-/storage/app/public/notas/*
-/storage/app/public/*.pdf
-/storage/app/public/*.jpg
-/storage/app/public/*.png
-/storage/framework/cache/data/*
-/storage/framework/sessions/*
-/storage/framework/testing/*
-/storage/framework/views/*
-/storage/logs/*.log
 .env
 .env.backup
 .env.production
