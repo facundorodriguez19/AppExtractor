@@ -3,5 +3,6 @@
 npm install
 # Compilar los estilos y scripts con Vite
 npm run build
-# Enlace de storage para las imágenes
-php artisan storage:link --force
+# Forzar la limpieza y creación del enlace de imágenes
+rm -rf public/storage
+php artisan storage:link
