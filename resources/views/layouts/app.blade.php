@@ -49,8 +49,11 @@
                         </div>
                     </div>
                     <div class="hidden sm:flex items-center">
-                        <a href="{{ route('notas.create') }}" class="px-4 py-2 bg-primary-500 text-white rounded-lg text-sm font-bold hover:bg-primary-600 transition">
-                            Nova Nota
+                        <a href="{{ route('notas.create') }}" class="group flex items-center space-x-2 px-4 py-2 bg-primary-500 text-white rounded-xl text-sm font-bold hover:bg-primary-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 shadow-sm border border-primary-400/20">
+                            <svg class="h-4 w-4 transform group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>Nova Nota</span>
                         </a>
                     </div>
                     <div class="flex items-center sm:hidden">
@@ -78,8 +81,11 @@
                     <a href="{{ route('notas.index') }}" class="{{ request()->routeIs('notas.index') ? 'bg-primary-50 text-primary-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} block rounded-lg px-3 py-2 text-sm font-bold">
                         Minhas Notas
                     </a>
-                    <a href="{{ route('notas.create') }}" class="mt-3 block rounded-lg bg-primary-500 px-3 py-2 text-center text-sm font-bold text-white hover:bg-primary-600">
-                        Nova Nota
+                    <a href="{{ route('notas.create') }}" class="mt-3 flex items-center justify-center space-x-2 rounded-xl bg-primary-500 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-primary-600 shadow-sm transition">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>Nova Nota</span>
                     </a>
                 </div>
             </div>
