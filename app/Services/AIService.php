@@ -72,11 +72,14 @@ Texto da nota fiscal extraído por OCR:
                 'response_format' => ['type' => 'json_object']
             ]);
 
-            if ($response->failed()) {
-                throw new AIProcessingException('Erro na API OpenAI: ' . $response->body());
+            $json = $response->json();
+
+            if (!isset($json['choices'][0]['message']['content'])) {
+                $errorMsg = $json['error']['message'] ?? 'Resposta inesperada da API';
+                throw new AIProcessingException('Erro OpenAI: ' . $errorMsg);
             }
 
-            $content = $response->json()['choices'][0]['message']['content'];
+            $content = $json['choices'][0]['message']['content'];
             $data = json_decode($content, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
