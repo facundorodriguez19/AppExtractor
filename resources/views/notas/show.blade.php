@@ -1,7 +1,7 @@
 <x-app-layout>
     <div x-data="notaStatusHandler({{ $nota->id }}, '{{ $nota->status }}')" x-init="init()">
         <!-- Status Banner -->
-        <div x-show="status === 'pendente' || status === 'processando'" class="mb-8 p-6 bg-indigo-50 border border-indigo-100 rounded-2xl flex flex-col items-center justify-center space-y-4">
+        <div x-show="status === 'pendente' || status === 'processando'" class="mb-6 sm:mb-8 p-4 sm:p-6 bg-indigo-50 border border-indigo-100 rounded-2xl flex flex-col items-center justify-center space-y-4">
             <svg class="animate-spin h-10 w-10 text-primary-500" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -12,9 +12,9 @@
             </div>
         </div>
 
-        <div x-show="status === 'erro'" class="mb-8 p-6 bg-red-50 border border-red-100 rounded-2xl">
-            <div class="flex items-start">
-                <div class="p-2 bg-red-100 rounded-lg text-red-600 mr-4">
+        <div x-show="status === 'erro'" class="mb-6 sm:mb-8 p-4 sm:p-6 bg-red-50 border border-red-100 rounded-2xl">
+            <div class="flex items-start gap-3 sm:gap-4">
+                <div class="p-2 bg-red-100 rounded-lg text-red-600 flex-shrink-0">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
@@ -30,28 +30,28 @@
         </div>
 
         <!-- Render Content if Processed or Error (to allow manual correction) -->
-        <div x-show="status === 'processado' || status === 'erro'" class="space-y-8">
-            <div class="flex justify-between items-center">
+        <div x-show="status === 'processado' || status === 'erro'" class="space-y-6 sm:space-y-8">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <h1 class="text-2xl font-bold text-gray-900">Detalhes da Nota</h1>
-                <div class="flex items-center space-x-3">
-                    <a href="{{ route('notas.edit', $nota) }}" class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('notas.edit', $nota) }}" class="flex-1 sm:flex-none px-4 py-2 bg-white border border-gray-200 rounded-lg text-center text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
                         Editar
                     </a>
-                    <form action="{{ route('notas.destroy', $nota) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta nota?')">
+                    <form class="flex-1 sm:flex-none" action="{{ route('notas.destroy', $nota) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta nota?')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition">
+                        <button type="submit" class="w-full px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-medium hover:bg-red-100 transition">
                             Excluir
                         </button>
                     </form>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                 <!-- Card 1: Informações Gerais -->
                 <div class="lg:col-span-1 space-y-6">
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 overflow-hidden relative">
-                        <div class="absolute top-0 right-0 mt-4 mr-4">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 overflow-hidden relative">
+                        <div class="mb-4 sm:absolute sm:top-0 sm:right-0 sm:mt-4 sm:mr-4">
                             @php
                                 $colors = [
                                     'alimentacao' => 'bg-orange-100 text-orange-700',
@@ -72,7 +72,7 @@
                         <div class="space-y-4">
                             <div>
                                 <p class="text-xs text-gray-500 font-medium">Nome / Razão Social</p>
-                                <p class="text-lg font-bold text-gray-900">{{ $nota->empresa_emissora ?? 'N/A' }}</p>
+                                <p class="text-lg font-bold text-gray-900 break-words">{{ $nota->empresa_emissora ?? 'N/A' }}</p>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500 font-medium">CNPJ</p>
@@ -85,7 +85,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6">
                         <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-6">Arquivo Original</h3>
                         <div class="rounded-xl overflow-hidden border border-gray-100 bg-gray-50">
                             @if($nota->arquivo_tipo === 'pdf')
@@ -105,6 +105,31 @@
                 <!-- Card 2: Itens e Total -->
                 <div class="lg:col-span-2 space-y-6">
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="md:hidden divide-y divide-gray-100">
+                            @forelse($nota->itens as $item)
+                                <div class="p-4">
+                                    <p class="text-sm font-bold text-gray-900">{{ $item->nome }}</p>
+                                    <div class="mt-3 grid grid-cols-3 gap-3 text-xs">
+                                        <div>
+                                            <p class="font-bold uppercase text-gray-400">Qtd</p>
+                                            <p class="mt-1 text-gray-700">{{ number_format($item->quantidade, 3, ',', '.') }} {{ $item->unidade }}</p>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold uppercase text-gray-400">Unitario</p>
+                                            <p class="mt-1 text-gray-700">R$ {{ number_format($item->preco_unitario, 2, ',', '.') }}</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="font-bold uppercase text-gray-400">Total</p>
+                                            <p class="mt-1 font-bold text-gray-900">R$ {{ number_format($item->preco_total, 2, ',', '.') }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="px-6 py-8 text-center text-gray-400">Nenhum item detectado.</div>
+                            @endforelse
+                        </div>
+
+                        <div class="hidden md:block overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-100">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -129,21 +154,22 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        </div>
                         
-                        <div class="p-8 bg-primary-50 flex justify-between items-center">
+                        <div class="p-4 sm:p-8 bg-primary-50 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                             <span class="text-primary-900 font-bold text-lg">Total da Nota</span>
-                            <span class="text-3xl font-black text-primary-600">R$ {{ number_format($nota->valor_total, 2, ',', '.') }}</span>
+                            <span class="text-2xl sm:text-3xl font-black text-primary-600">R$ {{ number_format($nota->valor_total, 2, ',', '.') }}</span>
                         </div>
                     </div>
 
                     <div x-data="{ open: false }" class="bg-white rounded-2xl shadow-sm border border-gray-100">
-                        <button @click="open = !open" class="w-full flex justify-between items-center p-6 text-sm font-bold text-gray-500 uppercase">
+                        <button @click="open = !open" class="w-full flex justify-between items-center gap-4 p-4 sm:p-6 text-left text-sm font-bold text-gray-500 uppercase">
                             Visualizar Texto Bruto (OCR)
                             <svg class="h-5 w-5 transform transition" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="open" x-cloak class="p-6 border-t border-gray-50 bg-gray-900 rounded-b-2xl">
+                        <div x-show="open" x-cloak class="p-4 sm:p-6 border-t border-gray-50 bg-gray-900 rounded-b-2xl">
                             <pre class="text-green-400 font-mono text-xs overflow-x-auto whitespace-pre-wrap">{{ $nota->texto_ocr }}</pre>
                         </div>
                     </div>

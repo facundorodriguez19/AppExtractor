@@ -1,13 +1,13 @@
 <x-app-layout>
     <div class="max-w-2xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-            <div class="mb-8">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-8">
+            <div class="mb-6 sm:mb-8">
                 <h1 class="text-2xl font-bold text-gray-900">Nova Nota Fiscal</h1>
                 <p class="text-gray-500">Envie uma imagem ou PDF para processamento automático.</p>
             </div>
 
             <form action="{{ route('notas.store') }}" method="POST" enctype="multipart/form-data" 
-                  x-data="{ dragging: false, preview: null, file: null, loading: false }"
+                  x-data="notaUploadForm()"
                   @submit="loading = true">
                 @csrf
 
@@ -16,12 +16,13 @@
                     <div 
                         @dragover.prevent="dragging = true" 
                         @dragleave.prevent="dragging = false"
-                        @drop.prevent="dragging = false; file = $event.dataTransfer.files[0]; handleFileSelect(file)"
+                        @drop.prevent="selectDroppedFile($event)"
                         :class="dragging ? 'border-primary-500 bg-primary-50' : 'border-gray-300 bg-gray-50'"
-                        class="relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-200 group"
+                        class="relative border-2 border-dashed rounded-2xl p-6 sm:p-12 text-center transition-all duration-200 group"
                     >
                         <input type="file" name="arquivo" id="arquivo" class="hidden" accept=".jpg,.jpeg,.png,.pdf"
-                               @change="file = $event.target.files[0]; handleFileSelect(file)">
+                               x-ref="fileInput"
+                               @change="selectFile($event.target.files[0])">
                         
                         <label for="arquivo" class="cursor-pointer">
                             <div x-show="!preview" class="space-y-4">
@@ -31,7 +32,7 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="text-lg font-semibold text-gray-700">Clique ou arraste seu arquivo</p>
+                                    <p class="text-base sm:text-lg font-semibold text-gray-700">Clique ou arraste seu arquivo</p>
                                     <p class="text-sm text-gray-500">JPG, PNG ou PDF até 10MB</p>
                                 </div>
                             </div>
@@ -48,18 +49,18 @@
                                         <span class="text-xs font-bold text-red-700 mt-2">PDF</span>
                                     </div>
                                 </template>
-                                <p class="text-sm font-medium text-gray-700 underline" x-text="file?.name"></p>
-                                <button type="button" @click.prevent="preview = null; file = null" class="text-xs text-red-500 hover:underline">Remover</button>
+                                <p class="text-sm font-medium text-gray-700 underline break-all" x-text="file?.name"></p>
+                                <button type="button" @click.prevent="clearFile()" class="text-xs text-red-500 hover:underline">Remover</button>
                             </div>
                         </label>
                     </div>
 
-                    <div class="flex items-center justify-end space-x-4">
-                        <a href="{{ route('notas.index') }}" class="px-6 py-2 text-sm font-medium text-gray-600 hover:text-gray-900">Cancelar</a>
+                    <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 sm:gap-4">
+                        <a href="{{ route('notas.index') }}" class="px-6 py-2 text-center text-sm font-medium text-gray-600 hover:text-gray-900">Cancelar</a>
                         <button type="submit" 
                                 :disabled="!file || loading"
                                 :class="(!file || loading) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-600 active:scale-95 shadow-lg shadow-primary-200'"
-                                class="px-8 py-3 bg-primary-500 text-white rounded-xl font-bold transition flex items-center space-x-2">
+                                class="w-full sm:w-auto justify-center px-8 py-3 bg-primary-500 text-white rounded-xl font-bold transition flex items-center space-x-2">
                             <template x-if="loading">
                                 <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -75,22 +76,45 @@
     </div>
 
     <script>
-        function handleFileSelect(file) {
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                this.preview = {
-                    url: e.target.result,
-                    type: file.type
-                };
-            };
-            if (file.type.startsWith('image/')) {
-                reader.readAsDataURL(file);
-            } else {
-                this.preview = {
-                    url: null,
-                    type: file.type
-                };
+        function notaUploadForm() {
+            return {
+                dragging: false,
+                preview: null,
+                file: null,
+                loading: false,
+                selectDroppedFile(event) {
+                    this.dragging = false;
+                    const droppedFile = event.dataTransfer.files[0];
+                    if (!droppedFile) return;
+
+                    const transfer = new DataTransfer();
+                    transfer.items.add(droppedFile);
+                    this.$refs.fileInput.files = transfer.files;
+                    this.selectFile(droppedFile);
+                },
+                selectFile(file) {
+                    if (!file) return;
+                    this.file = file;
+
+                    if (!file.type.startsWith('image/')) {
+                        this.preview = { url: null, type: file.type };
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        this.preview = {
+                            url: event.target.result,
+                            type: file.type
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                },
+                clearFile() {
+                    this.preview = null;
+                    this.file = null;
+                    this.$refs.fileInput.value = '';
+                }
             }
         }
     </script>

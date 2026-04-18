@@ -33,7 +33,7 @@ class NotaController extends Controller
         $type = $request->file('arquivo')->getClientOriginalExtension() === 'pdf' ? 'pdf' : 'imagem';
 
         $nota = Nota::create([
-            'user_id' => auth()->id(),
+            'user_id' => null,
             'arquivo' => $path,
             'arquivo_tipo' => $type,
             'status' => 'pendente'
@@ -46,26 +46,30 @@ class NotaController extends Controller
 
     public function show(Nota $nota)
     {
-        $this->authorize('view', $nota);
         return view('notas.show', compact('nota'));
     }
 
     public function edit(Nota $nota)
     {
-        $this->authorize('update', $nota);
         return view('notas.edit', compact('nota'));
     }
 
     public function update(UpdateNotaRequest $request, Nota $nota)
     {
-        $this->authorize('update', $nota);
+        $validated = $request->validated();
 
-        DB::transaction(function () use ($request, $nota) {
-            $nota->update($request->only(['empresa_emissora', 'cnpj', 'data_emissao', 'valor_total', 'categoria']));
+        DB::transaction(function () use ($validated, $nota) {
+            $nota->update(collect($validated)->only([
+                'empresa_emissora',
+                'cnpj',
+                'data_emissao',
+                'valor_total',
+                'categoria',
+            ])->all());
             
-            if ($request->has('itens')) {
+            if (array_key_exists('itens', $validated)) {
                 $nota->itens()->delete();
-                foreach ($request->itens as $item) {
+                foreach ($validated['itens'] ?? [] as $item) {
                     $nota->itens()->create($item);
                 }
             }
@@ -76,7 +80,6 @@ class NotaController extends Controller
 
     public function destroy(Nota $nota)
     {
-        $this->authorize('delete', $nota);
         Storage::disk('public')->delete($nota->arquivo);
         $nota->delete();
 
@@ -85,7 +88,6 @@ class NotaController extends Controller
 
     public function status(Nota $nota)
     {
-        $this->authorize('view', $nota);
         return response()->json([
             'status' => $nota->status,
             'processado' => $nota->status === 'processado',
@@ -95,14 +97,15 @@ class NotaController extends Controller
 
     public function exportarCSV(Request $request)
     {
-        $notas = Nota::where('user_id', auth()->id())
+        $notas = Nota::query()
             ->when($request->categoria, fn($q) => $q->where('categoria', $request->categoria))
             ->when($request->data_inicio, fn($q) => $q->whereDate('data_emissao', '>=', $request->data_inicio))
+            ->when($request->data_fim, fn($q) => $q->whereDate('data_emissao', '<=', $request->data_fim))
             ->get();
 
         $response = new StreamedResponse(function () use ($notas) {
             $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['ID', 'Empresa', 'CNPJ', 'Data', 'Valor Total', 'Categoria', 'Itens', 'Criado Em']);
+            fputcsv($handle, ['ID', 'Empresa', 'CNPJ', 'Data', 'Valor Total', 'Categoria', 'Qtd Itens', 'Criado Em']);
 
             foreach ($notas as $nota) {
                 fputcsv($handle, [
@@ -119,7 +122,7 @@ class NotaController extends Controller
             fclose($handle);
         });
 
-        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
         $response->headers->set('Content-Disposition', 'attachment; filename="notas_export.csv"');
 
         return $response;

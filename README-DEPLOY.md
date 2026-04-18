@@ -35,8 +35,9 @@ No painel da aplicação, vá em **"Environment Variables"** e adicione as segui
 | `APP_KEY` | *(Gere uma localmente com `php artisan key:generate --show`)* |
 | `DB_CONNECTION` | `mysql` |
 | `OCR_SPACE_API_KEY` | *(Sua chave do ocr.space)* |
-| `OPENAI_API_KEY` | *(Sua chave da OpenAI)* |
-| `OPENAI_MODEL` | `gpt-4o` |
+| `GEMINI_API_KEY` | *(Sua chave da Gemini API)* |
+| `GEMINI_MODEL` | `gemini-3.1-pro-preview` |
+| `GEMINI_THINKING_LEVEL` | `medium` |
 | `QUEUE_CONNECTION` | `database` |
 
 > **Dica**: As variáveis de conexão com o banco (host, user, password) são injetadas automaticamente pelo Clever Cloud se você vinculou o add-on.

@@ -22,6 +22,8 @@ class UpdateNotaRequest extends FormRequest
             'itens' => 'nullable|array',
             'itens.*.nome' => 'required|string',
             'itens.*.quantidade' => 'required|numeric|min:0',
+            'itens.*.unidade' => 'nullable|string|max:10',
+            'itens.*.preco_unitario' => 'nullable|numeric|min:0',
             'itens.*.preco_total' => 'required|numeric|min:0',
         ];
     }

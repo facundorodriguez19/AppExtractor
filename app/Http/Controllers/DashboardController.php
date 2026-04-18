@@ -9,43 +9,44 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $userId = auth()->id();
-        
         $stats = [
-            'total_notas' => Nota::where('user_id', $userId)->count(),
-            'total_gasto' => Nota::where('user_id', $userId)->where('status', 'processado')->sum('valor_total'),
-            'gasto_mes' => Nota::where('user_id', $userId)
+            'total_notas' => Nota::count(),
+            'total_gasto' => Nota::where('status', 'processado')->sum('valor_total'),
+            'gasto_mes' => Nota::query()
                 ->where('status', 'processado')
+                ->whereYear('data_emissao', now()->year)
                 ->whereMonth('data_emissao', now()->month)
                 ->sum('valor_total'),
-            'categoria_predominante' => Nota::where('user_id', $userId)
+            'categoria_predominante' => Nota::query()
                 ->select('categoria', DB::raw('count(*) as total'))
                 ->groupBy('categoria')
                 ->orderByDesc('total')
                 ->first()?->categoria ?? 'N/A'
         ];
 
-        $ultimasNotas = Nota::where('user_id', $userId)->latest()->take(5)->get();
+        $ultimasNotas = Nota::latest()->take(5)->get();
 
         return view('dashboard', compact('stats', 'ultimasNotas'));
     }
 
     public function estatisticas()
     {
-        $userId = auth()->id();
+        $dateExpression = DB::connection()->getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', data_emissao)"
+            : "DATE_FORMAT(data_emissao, '%Y-%m')";
 
         // Gastos por categoria
-        $porCategoria = Nota::where('user_id', $userId)
+        $porCategoria = Nota::query()
             ->where('status', 'processado')
             ->select('categoria', DB::raw('sum(valor_total) as total'))
             ->groupBy('categoria')
             ->get();
 
         // Gastos por mês (últimos 6 meses)
-        $porMes = Nota::where('user_id', $userId)
+        $porMes = Nota::query()
             ->where('status', 'processado')
             ->where('data_emissao', '>=', now()->subMonths(6))
-            ->select(DB::raw("DATE_FORMAT(data_emissao, '%Y-%m') as mes"), DB::raw('sum(valor_total) as total'))
+            ->select(DB::raw("{$dateExpression} as mes"), DB::raw('sum(valor_total) as total'))
             ->groupBy('mes')
             ->orderBy('mes')
             ->get();

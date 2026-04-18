@@ -19,7 +19,4 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
-// Registrar AuthServiceProvider manuelmente se necessário ou via Kernel
-$app->register(App\Providers\AuthServiceProvider::class);
-
 return $app;

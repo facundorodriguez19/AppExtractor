@@ -4,25 +4,25 @@
             @csrf
             @method('PUT')
 
-            <div class="space-y-8">
-                <div class="flex justify-between items-center">
+            <div class="space-y-6 sm:space-y-8">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                     <div>
                         <h1 class="text-2xl font-bold text-gray-900">Editar Nota Fiscal</h1>
                         <p class="text-gray-500">Corrija os dados extraídos pelo sistema.</p>
                     </div>
-                    <div class="flex space-x-3">
-                        <a href="{{ route('notas.show', $nota) }}" class="px-6 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
+                    <div class="flex gap-3 w-full sm:w-auto">
+                        <a href="{{ route('notas.show', $nota) }}" class="flex-1 sm:flex-none px-4 sm:px-6 py-2 bg-white border border-gray-200 rounded-xl text-center text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
                             Voltar
                         </a>
-                        <button type="submit" class="px-8 py-2 bg-primary-500 text-white rounded-xl font-bold hover:bg-primary-600 transition shadow-lg shadow-primary-200">
+                        <button type="submit" class="flex-1 sm:flex-none px-4 sm:px-8 py-2 bg-primary-500 text-white rounded-xl font-bold hover:bg-primary-600 transition shadow-lg shadow-primary-200">
                             Salvar Alterações
                         </button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                     <!-- Informações Básicas -->
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+                    <div class="bg-white p-4 sm:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
                         <h2 class="text-lg font-bold text-gray-900 border-b border-gray-50 pb-4">Dados do Emissor</h2>
                         
                         <div class="space-y-4">
@@ -38,7 +38,7 @@
                                        class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition">
                             </div>
 
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 mb-2">Data Emissão</label>
                                     <input type="date" name="data_emissao" value="{{ $nota->data_emissao?->format('Y-m-d') }}" 
@@ -46,7 +46,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-gray-700 mb-2">Categoria</label>
-                                    <select name="category" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition capitalize">
+                                    <select name="categoria" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition capitalize">
                                         @foreach(['alimentacao', 'transporte', 'saude', 'tecnologia', 'educacao', 'outros'] as $cat)
                                             <option value="{{ $cat }}" {{ $nota->categoria === $cat ? 'selected' : '' }}>{{ $cat }}</option>
                                         @endforeach
@@ -57,14 +57,14 @@
                     </div>
 
                     <!-- Valor Total e Arquivo -->
-                    <div class="space-y-8">
-                        <div class="bg-primary-500 p-8 rounded-2xl shadow-lg relative overflow-hidden">
+                    <div class="space-y-6 sm:space-y-8">
+                        <div class="bg-primary-500 p-4 sm:p-8 rounded-2xl shadow-lg relative overflow-hidden">
                             <div class="relative z-10">
                                 <h3 class="text-primary-100 font-bold uppercase tracking-widest text-xs mb-2">Valor Total</h3>
                                 <div class="flex items-center text-white">
                                     <span class="text-2xl mr-2">R$</span>
                                     <input type="number" step="0.01" name="valor_total" x-model="total" readonly
-                                           class="bg-transparent border-none p-0 text-4xl font-black focus:ring-0 w-full">
+                                           class="bg-transparent border-none p-0 text-3xl sm:text-4xl font-black focus:ring-0 w-full min-w-0">
                                 </div>
                                 <p class="text-primary-200 text-xs mt-4">* O valor total é recalculado com base nos itens.</p>
                             </div>
@@ -73,7 +73,7 @@
                             <div class="absolute top-0 right-0 h-24 w-24 bg-primary-600 rounded-full -mt-12 -mr-12 opacity-30"></div>
                         </div>
 
-                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="bg-white p-4 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
                              <h2 class="text-lg font-bold text-gray-900 border-b border-gray-50 pb-4 mb-6">Itens da Nota</h2>
                              <div class="space-y-4 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
                                 <template x-for="(item, index) in itens" :key="index">
@@ -87,7 +87,7 @@
                                             <input type="text" :name="`itens[${index}][nome]`" x-model="item.nome" placeholder="Nome do item"
                                                    class="w-full text-sm font-bold bg-transparent border-b border-gray-200 focus:border-primary-500 transition pb-1">
                                             
-                                            <div class="grid grid-cols-3 gap-4">
+                                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                                 <div>
                                                     <label class="text-[10px] uppercase font-bold text-gray-400">Qtd</label>
                                                     <input type="number" step="0.001" :name="`itens[${index}][quantidade]`" x-model="item.quantidade" @input="calculateItemTotal(index)"
@@ -100,6 +100,7 @@
                                                 </div>
                                                 <div>
                                                     <label class="text-[10px] uppercase font-bold text-gray-400">Total Item</label>
+                                                    <input type="hidden" :name="`itens[${index}][preco_unitario]`" x-model="item.preco_unitario">
                                                     <input type="number" step="0.01" :name="`itens[${index}][preco_total]`" x-model="item.preco_total" @input="updateGrandTotal()"
                                                            class="w-full text-xs bg-white border border-gray-100 rounded-lg p-2 mt-1 font-bold text-primary-600">
                                                 </div>
@@ -118,16 +119,13 @@
         </form>
     </div>
 
-    <!-- Alpine.js Mask Plugin via CDN (Optional but useful for inputs) -->
-    <script src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js" defer></script>
-
     <script>
         function editHandler(initialItens, initialTotal) {
             return {
                 itens: initialItens || [],
                 total: initialTotal,
                 addItem() {
-                    this.itens.push({ nome: '', quantidade: 1, unidade: 'UN', preco_total: 0 });
+                    this.itens.push({ nome: '', quantidade: 1, unidade: 'UN', preco_unitario: null, preco_total: 0 });
                 },
                 removeItem(index) {
                     this.itens.splice(index, 1);

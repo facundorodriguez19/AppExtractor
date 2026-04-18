@@ -10,7 +10,7 @@ class NotaRepository
 {
     public function paginate(int $perPage = 15, array $filters = []): LengthAwarePaginator
     {
-        $query = Nota::query()->where('user_id', auth()->id())->latest();
+        $query = Nota::query()->latest();
 
         if (isset($filters['categoria'])) {
             $query->where('categoria', $filters['categoria']);
@@ -36,6 +36,6 @@ class NotaRepository
 
     public function findById(int $id): Nota
     {
-        return Nota::where('user_id', auth()->id())->findOrFail($id);
+        return Nota::findOrFail($id);
     }
 }

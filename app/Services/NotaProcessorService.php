@@ -19,6 +19,8 @@ class NotaProcessorService
 
     public function processar(Nota $nota): void
     {
+        $transactionStarted = false;
+
         try {
             $nota->update(['status' => 'processando']);
 
@@ -37,6 +39,7 @@ class NotaProcessorService
 
             // 4. Persistência
             DB::beginTransaction();
+            $transactionStarted = true;
 
             $nota->update([
                 'empresa_emissora' => $dadosEstruturados['empresa_emissora'],
@@ -63,8 +66,12 @@ class NotaProcessorService
             }
 
             DB::commit();
+            $transactionStarted = false;
         } catch (Exception $e) {
-            DB::rollBack();
+            if ($transactionStarted) {
+                DB::rollBack();
+            }
+
             Log::error("Erro no processamento da nota {$nota->id}: " . $e->getMessage());
             
             $nota->update([

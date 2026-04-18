@@ -22,9 +22,10 @@ return [
         'key' => env('OCR_SPACE_API_KEY'),
     ],
 
-    'openai' => [
-        'key' => env('OPENAI_API_KEY'),
-        'model' => env('OPENAI_MODEL', 'gpt-4o'),
+    'gemini' => [
+        'key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-3.1-pro-preview'),
+        'thinking_level' => env('GEMINI_THINKING_LEVEL', 'medium'),
     ],
 
 ];

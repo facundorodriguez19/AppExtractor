@@ -7,7 +7,7 @@ Este projeto é uma aplicação Laravel completa para extração automatizada de
 - MySQL 8+
 - Composer
 - Chave de API [OCR.space](https://ocr.space/ocrapi)
-- Chave de API [OpenAI](https://platform.openai.com/)
+- Chave de API [Gemini](https://ai.google.dev/gemini-api/docs)
 
 ## Instalação
 
@@ -16,7 +16,7 @@ Este projeto é uma aplicação Laravel completa para extração automatizada de
    ```bash
    cp .env.example .env
    ```
-3. Preencha as chaves `OCR_SPACE_API_KEY` e `OPENAI_API_KEY` no `.env`.
+3. Preencha as chaves `OCR_SPACE_API_KEY` e `GEMINI_API_KEY` no `.env`.
 4. Instale as dependências do Composer:
    ```bash
    composer install
@@ -46,4 +46,4 @@ Este projeto é uma aplicação Laravel completa para extração automatizada de
 - **Backend**: Laravel 10
 - **Frontend**: Blade + Tailwind CSS + Alpine.js
 - **OCR**: OCR.space
-- **IA**: OpenAI GPT-4o
+- **IA**: Gemini 3.1 Pro Preview

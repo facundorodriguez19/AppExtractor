@@ -21,7 +21,7 @@ class OCRService
     public function extrairTexto(string $caminho, string $tipo): string
     {
         try {
-            $caminhoCompleto = Storage::path('public/' . $caminho);
+            $caminhoCompleto = Storage::disk('public')->path($caminho);
             
             if (!file_exists($caminhoCompleto)) {
                 throw new Exception("Arquivo não encontrado em: {$caminhoCompleto}");
@@ -35,6 +35,9 @@ class OCRService
             $base64Image = "data:{$mediaType};base64,{$base64}";
 
             $apiKey = config('services.ocr_space.key');
+            if (!$apiKey || $apiKey === 'YOUR_FREE_OCR_SPACE_KEY') {
+                throw new OCRException('Chave da API OCR.space nao configurada.');
+            }
 
             $data = [
                 'base64Image' => $base64Image,
@@ -62,7 +65,8 @@ class OCRService
             $result = $response->json();
 
             if (isset($result['IsErroredOnProcessing']) && $result['IsErroredOnProcessing'] === true) {
-                $msg = $result['ErrorMessage'][0] ?? 'Erro desconhecido no processamento do OCR';
+                $errorMessage = $result['ErrorMessage'] ?? 'Erro desconhecido no processamento do OCR';
+                $msg = is_array($errorMessage) ? ($errorMessage[0] ?? 'Erro desconhecido no processamento do OCR') : $errorMessage;
                 throw new OCRException("Erro no processamento do OCR: {$msg}");
             }
 
@@ -99,6 +103,9 @@ class OCRService
             $base64Image = "data:{$mediaType};base64,{$base64}";
 
             $apiKey = config('services.ocr_space.key');
+            if (!$apiKey || $apiKey === 'YOUR_FREE_OCR_SPACE_KEY') {
+                throw new OCRException('Chave da API OCR.space nao configurada.');
+            }
 
             $data = [
                 'base64Image' => $base64Image,
@@ -122,7 +129,8 @@ class OCRService
 
             $result = $response->json();
             if (isset($result['IsErroredOnProcessing']) && $result['IsErroredOnProcessing'] === true) {
-                throw new OCRException($result['ErrorMessage'][0] ?? 'Erro OCR');
+                $errorMessage = $result['ErrorMessage'] ?? 'Erro OCR';
+                throw new OCRException(is_array($errorMessage) ? ($errorMessage[0] ?? 'Erro OCR') : $errorMessage);
             }
 
             return $result['ParsedResults'][0]['ParsedText'] ?? '';

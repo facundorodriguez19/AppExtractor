@@ -12,35 +12,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Styles / Scripts -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            200: '#ddd6fe',
-                            300: '#c4b5fd',
-                            400: '#a78bfa',
-                            500: '#6366f1',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#4c1d95',
-                        },
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
 
     <style>
         [x-cloak] { display: none !important; }
@@ -54,7 +29,7 @@
 <body class="bg-gray-50 font-sans antialiased text-gray-900">
     <div class="min-h-screen flex flex-col">
         <!-- Navbar -->
-        <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 glass">
+        <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 glass" x-data="{ mobileMenuOpen: false }" @keydown.escape.window="mobileMenuOpen = false">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
@@ -71,33 +46,47 @@
                             <a href="{{ route('notas.index') }}" class="{{ request()->routeIs('notas.index') ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition duration-150 ease-in-out">
                                 Minhas Notas
                             </a>
-                            <a href="{{ route('notas.create') }}" class="{{ request()->routeIs('notas.create') ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition duration-150 ease-in-out">
-                                Nova Nota
-                            </a>
                         </div>
                     </div>
-                    <div class="flex items-center">
-                        <div class="ml-3 relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="flex items-center space-x-3 focus:outline-none">
-                                <span class="hidden sm:block text-sm font-medium text-gray-700">{{ Auth::user()->name }}</span>
-                                <div class="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
-                                    {{ substr(Auth::user()->name, 0, 1) }}
-                                </div>
-                            </button>
-                            <div x-show="open" @click.away="open = false" x-cloak class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sair</button>
-                                </form>
-                            </div>
-                        </div>
+                    <div class="hidden sm:flex items-center">
+                        <a href="{{ route('notas.create') }}" class="px-4 py-2 bg-primary-500 text-white rounded-lg text-sm font-bold hover:bg-primary-600 transition">
+                            Nova Nota
+                        </a>
                     </div>
+                    <div class="flex items-center sm:hidden">
+                        <button type="button"
+                                @click="mobileMenuOpen = !mobileMenuOpen"
+                                :aria-expanded="mobileMenuOpen.toString()"
+                                aria-controls="mobile-menu"
+                                class="inline-flex items-center justify-center rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                            <span class="sr-only">Abrir menu</span>
+                            <svg x-show="!mobileMenuOpen" class="h-6 w-6" x-cloak fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16" />
+                            </svg>
+                            <svg x-show="mobileMenuOpen" class="h-6 w-6" x-cloak fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="mobile-menu" x-show="mobileMenuOpen" x-cloak class="sm:hidden border-t border-gray-100 bg-white">
+                <div class="space-y-1 px-4 py-4">
+                    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'bg-primary-50 text-primary-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} block rounded-lg px-3 py-2 text-sm font-bold">
+                        Dashboard
+                    </a>
+                    <a href="{{ route('notas.index') }}" class="{{ request()->routeIs('notas.index') ? 'bg-primary-50 text-primary-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} block rounded-lg px-3 py-2 text-sm font-bold">
+                        Minhas Notas
+                    </a>
+                    <a href="{{ route('notas.create') }}" class="mt-3 block rounded-lg bg-primary-500 px-3 py-2 text-center text-sm font-bold text-white hover:bg-primary-600">
+                        Nova Nota
+                    </a>
                 </div>
             </div>
         </nav>
 
         <!-- Page Content -->
-        <main class="flex-1 py-8">
+        <main class="flex-1 py-6 sm:py-8">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 @if (session('success'))
                     <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" class="mb-4 bg-green-50 border-l-4 border-green-400 p-4 rounded-md shadow-sm">

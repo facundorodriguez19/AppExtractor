@@ -25,7 +25,7 @@ class CNPJValidacaoTest extends TestCase
         // CNPJs reais válidos (gerados por geradores de teste)
         $this->assertTrue($this->service->validarCNPJ('12.345.678/0001-95'));
         $this->assertTrue($this->service->validarCNPJ('45.997.418/0001-53'));
-        $this->assertTrue($this->service->validarCNPJ('72.715.111/0001-60'));
+        $this->assertTrue($this->service->validarCNPJ('04.252.011/0001-10'));
     }
 
     public function test_cnpj_invalido_retorna_false(): void
