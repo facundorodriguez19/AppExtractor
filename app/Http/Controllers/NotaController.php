@@ -14,7 +14,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class NotaController extends Controller
 {
-    public function __construct(protected NotaRepository $notaRepository) {}
+    public function __construct(protected NotaRepository $notaRepository)
+    {
+    }
 
     public function index(Request $request)
     {
@@ -66,7 +68,7 @@ class NotaController extends Controller
                 'valor_total',
                 'categoria',
             ])->all());
-            
+
             if (array_key_exists('itens', $validated)) {
                 $nota->itens()->delete();
                 foreach ($validated['itens'] ?? [] as $item) {
