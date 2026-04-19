@@ -33,7 +33,7 @@
                                 </div>
                                 <div>
                                     <p class="text-base sm:text-lg font-semibold text-gray-700">Clique ou arraste seu arquivo</p>
-                                    <p class="text-sm text-gray-500">JPG, PNG ou PDF até 10MB</p>
+                                    <p class="text-sm text-gray-500">JPG, PNG ou PDF até 1MB</p>
                                 </div>
                             </div>
 
